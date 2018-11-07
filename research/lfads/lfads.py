@@ -485,10 +485,10 @@ class LFADS(object):
         fns_out_fac_Ws[d] = makelambda(out_fac_W)
         fns_out_fac_bs[d] =  makelambda(out_fac_b)
 
-    pf_pairs_in_fac_Ws = zip(preds, fns_in_fac_Ws)
-    pf_pairs_in_fac_bs = zip(preds, fns_in_fac_bs)
-    pf_pairs_out_fac_Ws = zip(preds, fns_out_fac_Ws)
-    pf_pairs_out_fac_bs = zip(preds, fns_out_fac_bs)
+    pf_pairs_in_fac_Ws = list(zip(preds, fns_in_fac_Ws))
+    pf_pairs_in_fac_bs = list(zip(preds, fns_in_fac_bs))
+    pf_pairs_out_fac_Ws = list(zip(preds, fns_out_fac_Ws))
+    pf_pairs_out_fac_bs = list(zip(preds, fns_out_fac_bs))
 
     this_in_fac_W = tf.case(pf_pairs_in_fac_Ws, exclusive=True)
     this_in_fac_b = tf.case(pf_pairs_in_fac_bs, exclusive=True)
@@ -1112,7 +1112,7 @@ class LFADS(object):
       #bmrem_examples = np.zeros(bmrem, dtype=np.int32)
       ridxs = np.random.permutation(nexamples)[0:bmrem].astype(np.int32)
       bmrem_examples = np.sort(ridxs)
-    example_idxs = range(nexamples) + list(bmrem_examples)
+    example_idxs = list(range(nexamples)) + list(bmrem_examples)
     example_idxs_e_x_edivb = np.reshape(example_idxs, [-1, batch_size])
     return example_idxs_e_x_edivb, bmrem
 
@@ -1135,7 +1135,7 @@ class LFADS(object):
     if bmrem < batch_size:
       bmrem_examples = np.random.choice(range(nexamples),
                                         size=bmrem, replace=False)
-    example_idxs = range(nexamples) + list(bmrem_examples)
+    example_idxs = list(range(nexamples)) + list(bmrem_examples)
     mixed_example_idxs = np.random.permutation(example_idxs)
     example_idxs_e_x_edivb = np.reshape(mixed_example_idxs, [-1, batch_size])
     return example_idxs_e_x_edivb, bmrem
@@ -1398,7 +1398,7 @@ class LFADS(object):
 
     """
     hps = self.hps
-    all_data_names = datasets.keys()
+    all_data_names = list(datasets.keys())
     data_name = np.random.permutation(all_data_names)[0]
     data_dict = datasets[data_name]
     has_valid_set = True if data_dict['valid_data'] is not None else False
